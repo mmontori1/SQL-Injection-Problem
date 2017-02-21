@@ -1,0 +1,11 @@
+body {
+	margin-top: 80px;
+	text-align: center;
+    background-color: darkslategrey;
+	color: azure;
+    font-size: 1.1em;
+}
+h1 {
+	/*text-align: center;*/
+    color: coral;
+}
