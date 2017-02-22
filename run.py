@@ -12,6 +12,7 @@ def my_form():
 @app.route('/results', methods = ['POST'])
 def results():
     names = request.form['names']
+    names = names.lower()
     result = ""
 
     try:
@@ -19,24 +20,28 @@ def results():
                                   host='127.0.0.1',
                                   database='ctf')
         cursor = connection.cursor()
-        sql = "SELECT password FROM ctf.users where user_id = " + names
-        cursor.execute(sql)
-        for(password), in cursor:
-            result += password
+        sql = "SELECT password FROM ctf.users where name = \'" + names + "\'"
+        print(sql)
+        # execute multiple sql statements to allow for sql injection
+        results = cursor.execute(sql, multi=True)
+        # loop through all statements
+        # for each value, set the password
+        for cur in results:
+            if cur.with_rows:
+                for values in cur.fetchall():
+                    for password in values:
+                        result += password
         connection.close()
     # should return an error if query doesn't work
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
         return render_template("input_error.html")
-    # try to convert input into an int
-    try:
-        names = int(names)
-    except:
-        pass
 
     #if the number input is the 10, goes to error page
     #if the result value isn't change, goes to not exist page
-    if names == 10:
+    #FIGURE OUT joe, Joe, jOe, joE, JOe, JoE, jOE, JOE returns answer
+    if ''.join(names.split()) == "joe":
+        names = ''.join(names.split())
         return render_template("error.html", names=names)
     if result != "":
         return render_template("results.html", names=names, result=result)
