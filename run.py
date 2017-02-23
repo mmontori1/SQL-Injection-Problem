@@ -31,15 +31,19 @@ def results():
                 for values in cur.fetchall():
                     for password in values:
                         result += password
+
         connection.close()
     # should return an error if query doesn't work
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
         return render_template("input_error.html")
 
+    #Change it to two input fields
+        #-user, so it is a specific person
+        #-password, where the person can do sql injection to get the password
     #if the number input is the 10, goes to error page
     #if the result value isn't change, goes to not exist page
-    #FIGURE OUT joe, Joe, jOe, joE, JOe, JoE, jOE, JOE returns answer
+    #FIGURE OUT joe' and 1=1; -- a
     if ''.join(names.split()) == "joe":
         names = ''.join(names.split())
         return render_template("error.html", names=names)
