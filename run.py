@@ -16,26 +16,46 @@ def results():
     passwords = request.form['passwords']
     result = ""
 
+    #user info
+    user_id = None
+    user_password = None
+    user_name = None
+
     try:
         connection = mysql.connector.connect(user='test', password='password',
                                   host='127.0.0.1',
                                   database='ctf')
         cursor = connection.cursor()
-        # sql = "SELECT password FROM ctf.users where name = \'" + names + "\'"
-        # print(sql)
+        # 'SELECT * FROM Users WHERE Name ="' + uName + '" AND Pass ="' + uPass + '"'
+        # 'SELECT * FROM ctf.users WHERE name ="' names + '" AND password ="' + passwords + '"'
+        # cow = 'SELECT * FROM ctf.users WHERE name =\"' + names + '\" AND password =\"' + passwords + '\"'
+        # print(cow)
         user_sql = "SELECT * FROM ctf.users where name = \'" + names + "\'"
-        pass_sql = "AND password = \'" + password + "\'"
+        pass_sql = " AND password = \'" + passwords + "\'"
         sql = user_sql + pass_sql
+        # print(sql)
         # execute multiple sql statements to allow for sql injection
         results = cursor.execute(sql, multi=True)
         # loop through all statements
         # for each value, set the password
+        # for cur in results:
+        #     if cur.with_rows:
+        #         for values in cur.fetchall():
+        #             print(values)
+        #             for password in values:
+        #                 print(password)
+        #                 result = password
+        # print(results[0][0])
         for cur in results:
             if cur.with_rows:
-                for values in cur.fetchall():
-                    for password in values:
-                        result = password
-
+                # print(cur.fetchall())
+                nest = cur.fetchall()
+                # print(nest)
+                # print("user_id: " nest[0][0])
+        user_id = nest[0][0]
+        user_password = nest[0][1]
+        user_name = nest[0][2]
+        # print(user_id)
         connection.close()
     # should return an error if query doesn't work
     except mysql.connector.Error as err:
