@@ -13,6 +13,7 @@ def my_form():
 def results():
     names = request.form['names']
     names = names.lower()
+    passwords = request.form['passwords']
     result = ""
 
     try:
@@ -20,8 +21,11 @@ def results():
                                   host='127.0.0.1',
                                   database='ctf')
         cursor = connection.cursor()
-        sql = "SELECT password FROM ctf.users where name = \'" + names + "\'"
-        print(sql)
+        # sql = "SELECT password FROM ctf.users where name = \'" + names + "\'"
+        # print(sql)
+        user_sql = "SELECT * FROM ctf.users where name = \'" + names + "\'"
+        pass_sql = "AND password = \'" + password + "\'"
+        sql = user_sql + pass_sql
         # execute multiple sql statements to allow for sql injection
         results = cursor.execute(sql, multi=True)
         # loop through all statements
@@ -30,7 +34,7 @@ def results():
             if cur.with_rows:
                 for values in cur.fetchall():
                     for password in values:
-                        result += password
+                        result = password
 
         connection.close()
     # should return an error if query doesn't work
