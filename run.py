@@ -45,18 +45,22 @@ def results():
         #             for password in values:
         #                 print(password)
         #                 result = password
+
         # print(results[0][0])
         for cur in results:
             if cur.with_rows:
                 # print(cur.fetchall())
                 nest = cur.fetchall()
-                # print(nest)
+                print(nest)
                 # print("user_id: " nest[0][0])
-        user_id = nest[0][0]
-        user_password = nest[0][1]
-        user_name = nest[0][2]
-        # print(user_id)
+        if(len(nest) != 0):
+            user_id = nest[0][0]
+            user_password = nest[0][1]
+            user_name = nest[0][2]
+            result = "a"
+        # print(results)
         connection.close()
+
     # should return an error if query doesn't work
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))
@@ -68,11 +72,11 @@ def results():
     #if the number input is the 10, goes to error page
     #if the result value isn't change, goes to not exist page
     #FIGURE OUT joe' and 1=1; -- a
-    if ''.join(names.split()) == "joe":
+    if ''.join(names.split()) == "joe" and user_password != passwords:
         names = ''.join(names.split())
         return render_template("error.html", names=names)
     if result != "":
-        return render_template("results.html", names=names, result=result)
+        return render_template("results.html", names=names, result=user_password)
     else:
     	return render_template("notexist.html", names=names)
 
