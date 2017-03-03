@@ -33,20 +33,9 @@ def results():
         user_sql = "SELECT * FROM ctf.users where name = \'" + names + "\'"
         pass_sql = " AND password = \'" + passwords + "\'"
         sql = user_sql + pass_sql
-        # print(sql)
         # execute multiple sql statements to allow for sql injection
         results = cursor.execute(sql, multi=True)
-        # loop through all statements
-        # for each value, set the password
-        # for cur in results:
-        #     if cur.with_rows:
-        #         for values in cur.fetchall():
-        #             print(values)
-        #             for password in values:
-        #                 print(password)
-        #                 result = password
 
-        # print(results[0][0])
         for cur in results:
             if cur.with_rows:
                 # print(cur.fetchall())
